@@ -1,0 +1,13 @@
+build*/
+output/
+plots/
+*.csv
+*.wrl
+*.root
+*.log
+*.dSYM/
+event-display-3d/node_modules/
+event-display-3d/dist/
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/

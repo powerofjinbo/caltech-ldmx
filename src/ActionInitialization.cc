@@ -1,0 +1,23 @@
+#include "ActionInitialization.hh"
+
+#include "DetectorConstruction.hh"
+#include "EventAction.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
+#include "SteppingAction.hh"
+#include "TrackingAction.hh"
+
+ActionInitialization::ActionInitialization(const DetectorConstruction* detector)
+    : fDetector(detector) {}
+
+void ActionInitialization::Build() const {
+  auto* eventAction =
+      new EventAction(fDetector->GetNumberOfLayers(),
+                      fDetector->GetCrystalsPerLayer());
+
+  SetUserAction(new PrimaryGeneratorAction());
+  SetUserAction(new RunAction("output/base_muon"));
+  SetUserAction(eventAction);
+  SetUserAction(new SteppingAction(eventAction, fDetector));
+  SetUserAction(new TrackingAction(eventAction));
+}

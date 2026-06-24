@@ -1,0 +1,17 @@
+/control/verbose 1
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
+
+/run/initialize
+
+# Default smoke-test beam. Change this once Bertrand gives the nominal muon
+# energy and beam spot; the rest of the pipeline does not depend on this value.
+/gun/particle mu-
+/gun/energy 8 GeV
+/gun/position 0.1 0.1 -250 mm
+/gun/direction 0 0 1
+
+/run/printProgress 1
+/run/beamOn 10
