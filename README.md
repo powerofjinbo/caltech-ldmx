@@ -2,9 +2,10 @@
 
 Minimal Geant4 pipeline for a muon-beam LDMX-like active-target study.
 
-The first detector model is intentionally small and inspectable:
+The current detector model is proposal-aligned but still intentionally
+inspectable:
 
-- 25 LYSO layers along the beam axis, for `25 cm` total LYSO thickness.
+- 40 LYSO layers along the beam axis, for `40 cm` total LYSO thickness.
 - 10 crystals per layer.
 - Each crystal is `1 cm x 1 cm x 10 cm`.
 - Beam direction is `+z`.
@@ -13,7 +14,7 @@ The first detector model is intentionally small and inspectable:
 - Even layers use bars along `x`; odd layers use bars along `y`, giving a simple 2D hodoscope-like active target.
 - Adjacent layers have a `0.1 mm` air gap in the scaffold to avoid idealized
   coincident-boundary navigation issues during early development, so the
-  current outer z-extent is `25.24 cm`.
+  current outer z-extent is `40.39 cm`.
 - LYSO is approximated as `Lu1.8Y0.2SiO5`, density `7.10 g/cm3`; Ce doping and optical photons are not modeled yet.
 
 ## Build
@@ -31,13 +32,13 @@ cmake --build build -j
 ```sh
 ./build/muon_active_target macros/run_muon.mac
 ./build/muon_active_target macros/run_muon_15gev.mac
-python3 analysis/summarize_events.py output/muon_8gev_nt_events.csv
-python3 analysis/summarize_events.py output/muon_15gev_nt_events.csv
+python3 analysis/summarize_events.py output/muon_8gev_40layer_nt_events.csv
+python3 analysis/summarize_events.py output/muon_15gev_40layer_nt_events.csv
 python3 analysis/plot_basic.py \
-  --events output/muon_8gev_nt_events.csv \
-  --layers output/muon_8gev_nt_layers.csv \
-  --crystals output/muon_8gev_nt_crystals.csv \
-  --out-dir plots/muon_8gev
+  --events output/muon_8gev_40layer_nt_events.csv \
+  --layers output/muon_8gev_40layer_nt_layers.csv \
+  --crystals output/muon_8gev_40layer_nt_crystals.csv \
+  --out-dir plots/muon_8gev_40layer
 ```
 
 ## Write A 3D Geant4 View
@@ -96,16 +97,18 @@ The CSV ntuple records one row per event:
 - `out_muon_ke_gev`: primary muon kinetic energy after leaving the active target, or `-1` if not recorded.
 - `n_secondaries`, `n_charged_secondaries`, `n_gamma_secondaries`: secondary-particle counters.
 
-The 8 GeV run writes:
+The 40-layer 8 GeV run writes:
 
-- `output/muon_8gev_nt_events.csv`: one row per event.
-- `output/muon_8gev_nt_layers.csv`: one row per event and layer.
-- `output/muon_8gev_nt_crystals.csv`: one row per event and hit crystal.
-- `output/muon_8gev_tracks.csv`: one row per Geant4 track, including
+- `output/muon_8gev_40layer_nt_events.csv`: one row per event.
+- `output/muon_8gev_40layer_nt_layers.csv`: one row per event and layer.
+- `output/muon_8gev_40layer_nt_crystals.csv`: one row per event and hit crystal.
+- `output/muon_8gev_40layer_tracks.csv`: one row per Geant4 track, including
   `track_id`, `parent_id`, `particle_name`, `pdg`, `creator_process`, start/end
   position, kinetic energy, and track length.
 
-The 15 GeV run uses the same naming pattern with the `muon_15gev` prefix.
+The 15 GeV run uses the same naming pattern with the `muon_15gev_40layer`
+prefix. The 25-layer validation plots are documented in
+`docs/baseline_mip_calibration.md`.
 
 `analysis/plot_basic.py` creates dependency-free SVG plots in `plots/`:
 
@@ -121,12 +124,12 @@ python3 analysis/vrml_event_display.py g4_01.wrl
 open plots/event_display_tracks.svg
 ```
 
-If `output/base_muon_nt_tracks.csv` comes from the same event, the SVG labels
+If `output/base_muon_tracks.csv` comes from the same event, the SVG labels
 long tracks with truth information:
 
 ```sh
 python3 analysis/vrml_event_display.py g4_07.wrl \
-  --tracks output/base_muon_nt_tracks.csv \
+  --tracks output/base_muon_tracks.csv \
   --out plots/event_display_tracks_labeled.svg
 ```
 
@@ -138,7 +141,7 @@ The browser/Three.js viewer is lightweight and reads the Geant4 VRML output:
 
 ```sh
 python3 event-display-3d/scripts/vrml_to_event_json.py g4_07.wrl \
-  --tracks output/base_muon_nt_tracks.csv \
+  --tracks output/base_muon_tracks.csv \
   --out event-display-3d/public/event.json
 cd event-display-3d
 npm install
@@ -177,8 +180,7 @@ the XQuartz package installer and enter the macOS administrator password.
 ## Next Engineering Steps
 
 1. Confirm beam energy, beam spot, and layer/bar orientation with Bertrand.
-2. Add macro-driven geometry parameters if the 25-layer design changes.
-3. Add event displays for high-extra-activity events.
-4. Generate dedicated SM background samples: muon bremsstrahlung, pair production, and muon-nuclear interactions.
-5. Build cut scans: outgoing-muon energy loss plus active-target veto variables.
-6. Cross-check `FTFP_BERT` against at least one alternate physics list.
+2. Add macro-driven geometry parameters instead of the current compile-time layer count.
+3. Generate controlled background-like samples: muon plus photon, muon plus `e+e-`, and muon plus hadrons.
+4. Build cut scans: outgoing-muon energy loss plus active-target veto variables.
+5. Cross-check `FTFP_BERT` against at least one alternate physics list.

@@ -20,7 +20,7 @@ def main():
     parser.add_argument(
         "csv_file",
         nargs="?",
-        default="output/muon_8gev_nt_events.csv",
+        default="output/muon_8gev_40layer_nt_events.csv",
         help="CSV ntuple produced by muon_active_target",
     )
     parser.add_argument(

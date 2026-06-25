@@ -277,6 +277,8 @@ def event_distributions(events, out_dir):
     total_edep = [f(row, "total_edep_mev") for row in events]
     primary_edep = [f(row, "primary_muon_edep_mev") for row in events]
     extra_edep = [f(row, "extra_edep_mev") for row in events]
+    max_layer_edep = [f(row, "max_layer_edep_mev") for row in events]
+    extra_hit_crystals = [i(row, "n_extra_hit_crystals") for row in events]
     hit_layers = [max(i(row, "n_hit_layers"), 1) for row in events]
     out_muon_ke = [
         f(row, "out_muon_ke_gev")
@@ -313,6 +315,20 @@ def event_distributions(events, out_dir):
         extra_edep,
         out_dir / "extra_edep_tail.svg",
         "extra_edep threshold [MeV]",
+    )
+    histogram_plot(
+        "Maximum layer energy deposition distribution",
+        max_layer_edep,
+        out_dir / "max_layer_edep_distribution.svg",
+        "max_layer_edep [MeV]",
+        color="#ea580c",
+    )
+    histogram_plot(
+        "Extra hit crystal multiplicity distribution",
+        extra_hit_crystals,
+        out_dir / "n_extra_hit_crystals_distribution.svg",
+        "n_extra_hit_crystals",
+        color="#0891b2",
     )
     histogram_plot(
         "Outgoing primary muon kinetic energy distribution",
@@ -386,9 +402,9 @@ def hitmap(crystals, event_id, path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--events", default="output/muon_8gev_nt_events.csv")
-    parser.add_argument("--layers", default="output/muon_8gev_nt_layers.csv")
-    parser.add_argument("--crystals", default="output/muon_8gev_nt_crystals.csv")
+    parser.add_argument("--events", default="output/muon_8gev_40layer_nt_events.csv")
+    parser.add_argument("--layers", default="output/muon_8gev_40layer_nt_layers.csv")
+    parser.add_argument("--crystals", default="output/muon_8gev_40layer_nt_crystals.csv")
     parser.add_argument("--event-id", type=int, default=0)
     parser.add_argument("--out-dir", default="plots")
     args = parser.parse_args()
@@ -428,6 +444,8 @@ def main():
     print(f"wrote {out_dir / 'total_edep_distribution.svg'}")
     print(f"wrote {out_dir / 'extra_edep_distribution.svg'}")
     print(f"wrote {out_dir / 'extra_edep_tail.svg'}")
+    print(f"wrote {out_dir / 'max_layer_edep_distribution.svg'}")
+    print(f"wrote {out_dir / 'n_extra_hit_crystals_distribution.svg'}")
     print(f"wrote {out_dir / 'out_muon_ke_distribution.svg'}")
     print(f"wrote {out_dir / 'event_total_edep.svg'}")
     print(f"wrote {out_dir / 'average_layer_profile.svg'}")

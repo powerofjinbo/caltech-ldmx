@@ -24,7 +24,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
  private:
   G4Material* BuildLYSO() const;
 
-  const G4int fNumberOfLayers = 25;
+  const G4int fNumberOfLayers = 40;
   const G4int fCrystalsPerLayer = 10;
   const G4double fCrystalPitch = 1.0 * cm;
   const G4double fLayerThickness = 1.0 * cm;

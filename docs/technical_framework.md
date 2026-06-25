@@ -2,7 +2,7 @@
 
 ## 一句话定位
 
-这个 SURF 项目的核心不是“怎么造出 muon beam”，而是“如果已经有 muon beam，25 层 LYSO active target 能不能同时充当 target 和 detector，把 Standard Model background 产生的额外可见活动 veto 掉”。
+这个 SURF 项目的核心不是“怎么造出 muon beam”，而是“如果已经有 muon beam，40 层 LYSO active target 能不能同时充当 target 和 detector，把 Standard Model background 产生的额外可见活动 veto 掉”。
 
 ## 物理逻辑
 
@@ -37,13 +37,14 @@ Geant4 geometry
 当前 scaffold 的默认假设：
 
 - Beam 沿 `+z`。
-- LYSO 总厚度 `25 cm`，由 25 层组成，每层厚 `1 cm`；当前 scaffold 加了 24 个 `0.1 mm` 层间 gap，所以几何外包络约 `25.24 cm`。
+- LYSO 总厚度 `40 cm`，由 40 层组成，每层厚 `1 cm`；当前 scaffold 加了 39 个 `0.1 mm` 层间 gap，所以几何外包络约 `40.39 cm`。
 - 每层 10 根 LYSO crystal bar，每根尺寸 `1 cm x 1 cm x 10 cm`。
 - 偶数层 bar 沿 `x`，奇数层 bar 沿 `y`，这样可以提供二维横向 hit 信息。
 - LYSO 用 `Lu1.8Y0.2SiO5` 近似，密度 `7.10 g/cm3`。
 - 暂时不模拟 optical photons、SiPM response、electronics threshold 或 timing。
 - 默认 beam spot 放在 `(0.1 mm, 0.1 mm)`，避免理想几何中 `x=0,y=0` 正好落在 crystal boundary 上导致 Geant4 navigation 变慢。
-- scaffold 默认在相邻层之间留 `0.1 mm` air gap，避免早期开发时直接相接的 250 个 volumes 造成边界导航问题；真实机械设计确认后可以再改成实际间距。
+- scaffold 默认在相邻层之间留 `0.1 mm` air gap，避免早期开发时直接相接的 400 个 crystal volumes 造成边界导航问题；真实机械设计确认后可以再改成实际间距。
+- 早期 25-layer debug baseline 已经记录在 `docs/baseline_mip_calibration.md`，当前代码默认使用 proposal-aligned 40-layer geometry。
 
 这个交错方向是一个工程假设，之后应和 Bertrand 确认。如果真实设计是所有层同向或有更复杂的 staggering，只需要改 `DetectorConstruction.cc`。
 
@@ -74,7 +75,7 @@ AND n_extra_hit_layers <= N_layer_veto
 ### Week 1: base pipeline
 
 - 跑通 Geant4/CMake。
-- 建好 25-layer LYSO target。
+- 建好 40-layer LYSO target。
 - 生成 8 GeV 和 15 GeV muon smoke samples。
 - 输出 CSV ntuple。
 - 检查 MIP-like muon 的能量沉积是否在合理量级。

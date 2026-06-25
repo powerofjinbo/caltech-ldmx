@@ -4,7 +4,7 @@
 /tracking/verbose 0
 /process/em/verbose 0
 
-/muonActiveTarget/outputBaseName output/muon_15gev
+/muonActiveTarget/outputBaseName output/muon_15gev_40layer
 /run/initialize
 
 # M3-like smoke-test energy.
