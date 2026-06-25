@@ -7,10 +7,11 @@
 
 class EventAction;
 class G4Track;
+class RunAction;
 
 class TrackingAction : public G4UserTrackingAction {
  public:
-  explicit TrackingAction(EventAction* eventAction);
+  TrackingAction(EventAction* eventAction, const RunAction* runAction);
   ~TrackingAction() override = default;
 
   void PreUserTrackingAction(const G4Track* track) override;
@@ -23,6 +24,7 @@ class TrackingAction : public G4UserTrackingAction {
   };
 
   EventAction* fEventAction;
+  const RunAction* fRunAction;
   TrackStart fTrackStart;
 };
 

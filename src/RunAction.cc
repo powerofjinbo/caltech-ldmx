@@ -1,13 +1,22 @@
 #include "RunAction.hh"
 
 #include "G4AnalysisManager.hh"
+#include "G4GenericMessenger.hh"
 #include "G4Run.hh"
 
 #include <filesystem>
 #include <fstream>
+#include <utility>
 
 RunAction::RunAction(G4String outputBaseName)
     : fOutputBaseName(std::move(outputBaseName)) {
+  fMessenger = std::make_unique<G4GenericMessenger>(
+      this, "/muonActiveTarget/", "Muon LDMX active-target controls");
+  auto& outputCommand = fMessenger->DeclareProperty(
+      "outputBaseName", fOutputBaseName, "Base name for output CSV files");
+  outputCommand.SetParameterName("outputBaseName", false);
+  outputCommand.SetStates(G4State_PreInit, G4State_Idle);
+
   auto* analysis = G4AnalysisManager::Instance();
   analysis->SetDefaultFileType("csv");
   analysis->SetVerboseLevel(1);
@@ -48,9 +57,11 @@ RunAction::RunAction(G4String outputBaseName)
 
 }
 
+RunAction::~RunAction() = default;
+
 void RunAction::BeginOfRunAction(const G4Run*) {
   std::filesystem::create_directories("output");
-  std::ofstream tracks("output/base_muon_nt_tracks.csv");
+  std::ofstream tracks(fOutputBaseName + "_tracks.csv");
   tracks << "event_id,track_id,parent_id,particle_name,pdg,charge_e,"
             "creator_process,start_x_mm,start_y_mm,start_z_mm,end_x_mm,"
             "end_y_mm,end_z_mm,initial_ke_mev,final_ke_mev,track_length_mm\n";

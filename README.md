@@ -26,12 +26,18 @@ cmake -S . -B build
 cmake --build build -j
 ```
 
-## Run A Smoke Test
+## Run Baseline Muon Samples
 
 ```sh
 ./build/muon_active_target macros/run_muon.mac
-python3 analysis/summarize_events.py output/base_muon_nt_events.csv
-python3 analysis/plot_basic.py
+./build/muon_active_target macros/run_muon_15gev.mac
+python3 analysis/summarize_events.py output/muon_8gev_nt_events.csv
+python3 analysis/summarize_events.py output/muon_15gev_nt_events.csv
+python3 analysis/plot_basic.py \
+  --events output/muon_8gev_nt_events.csv \
+  --layers output/muon_8gev_nt_layers.csv \
+  --crystals output/muon_8gev_nt_crystals.csv \
+  --out-dir plots/muon_8gev
 ```
 
 ## Write A 3D Geant4 View
@@ -57,10 +63,11 @@ If macOS does not know what app to use, install/use a VRML-capable viewer such
 as FreeWRL, view3dscene, MeshLab, or Blender. The current Geant4 build avoids
 OpenGL/XQuartz because this machine is missing the `/opt/X11` runtime libraries.
 
-The default macro fires 10 `8 GeV` `mu-` particles through the target. A
-`15 GeV` M3-like smoke macro is also included:
+The baseline macros each fire 1000 primary `mu-` particles through the target.
+The default macro uses `8 GeV`; the M3-like comparison macro uses `15 GeV`:
 
 ```sh
+./build/muon_active_target macros/run_muon.mac
 ./build/muon_active_target macros/run_muon_15gev.mac
 ```
 
@@ -89,13 +96,16 @@ The CSV ntuple records one row per event:
 - `out_muon_ke_gev`: primary muon kinetic energy after leaving the active target, or `-1` if not recorded.
 - `n_secondaries`, `n_charged_secondaries`, `n_gamma_secondaries`: secondary-particle counters.
 
-The run also writes:
+The 8 GeV run writes:
 
-- `output/base_muon_nt_layers.csv`: one row per event and layer.
-- `output/base_muon_nt_crystals.csv`: one row per event and hit crystal.
-- `output/base_muon_nt_tracks.csv`: one row per Geant4 track, including
+- `output/muon_8gev_nt_events.csv`: one row per event.
+- `output/muon_8gev_nt_layers.csv`: one row per event and layer.
+- `output/muon_8gev_nt_crystals.csv`: one row per event and hit crystal.
+- `output/muon_8gev_tracks.csv`: one row per Geant4 track, including
   `track_id`, `parent_id`, `particle_name`, `pdg`, `creator_process`, start/end
   position, kinetic energy, and track length.
+
+The 15 GeV run uses the same naming pattern with the `muon_15gev` prefix.
 
 `analysis/plot_basic.py` creates dependency-free SVG plots in `plots/`:
 

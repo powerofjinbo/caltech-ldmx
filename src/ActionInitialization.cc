@@ -14,10 +14,11 @@ void ActionInitialization::Build() const {
   auto* eventAction =
       new EventAction(fDetector->GetNumberOfLayers(),
                       fDetector->GetCrystalsPerLayer());
+  auto* runAction = new RunAction("output/base_muon");
 
   SetUserAction(new PrimaryGeneratorAction());
-  SetUserAction(new RunAction("output/base_muon"));
+  SetUserAction(runAction);
   SetUserAction(eventAction);
   SetUserAction(new SteppingAction(eventAction, fDetector));
-  SetUserAction(new TrackingAction(eventAction));
+  SetUserAction(new TrackingAction(eventAction, runAction));
 }

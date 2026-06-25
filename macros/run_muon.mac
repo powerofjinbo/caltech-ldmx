@@ -4,6 +4,7 @@
 /tracking/verbose 0
 /process/em/verbose 0
 
+/muonActiveTarget/outputBaseName output/muon_8gev
 /run/initialize
 
 # Default smoke-test beam. Change this once Bertrand gives the nominal muon
@@ -13,5 +14,5 @@
 /gun/position 0.1 0.1 -250 mm
 /gun/direction 0 0 1
 
-/run/printProgress 1
-/run/beamOn 10
+/run/printProgress 100
+/run/beamOn 1000
