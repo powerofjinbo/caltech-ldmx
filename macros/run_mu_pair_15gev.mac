@@ -1,0 +1,23 @@
+/control/verbose 1
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
+
+/muonActiveTarget/outputBaseName output/mu_pair_15gev_40layer
+/run/initialize
+
+# Controlled topology sample: primary mu- plus an injected e- and e+ pair.
+# secondaryEnergy is the kinetic energy assigned to each lepton.
+/muonActiveTarget/generator/generatorMode muPair
+/muonActiveTarget/generator/secondaryEnergy 0.5 GeV
+/muonActiveTarget/generator/secondaryAngle 10 deg
+/muonActiveTarget/generator/emissionLayer 20
+
+/gun/particle mu-
+/gun/energy 15 GeV
+/gun/position 0.1 0.1 -250 mm
+/gun/direction 0 0 1
+
+/run/printProgress 10
+/run/beamOn 100

@@ -16,7 +16,7 @@ void ActionInitialization::Build() const {
                       fDetector->GetCrystalsPerLayer());
   auto* runAction = new RunAction("output/base_muon");
 
-  SetUserAction(new PrimaryGeneratorAction());
+  SetUserAction(new PrimaryGeneratorAction(fDetector));
   SetUserAction(runAction);
   SetUserAction(eventAction);
   SetUserAction(new SteppingAction(eventAction, fDetector));

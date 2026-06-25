@@ -115,18 +115,89 @@ downstream hadronic calorimetry in a fuller detector.
 
 ## Implementation Plan
 
-Add a macro-controlled generator mode, for example:
+The standalone app now has a macro-controlled generator mode, for example:
 
 ```text
-/muonActiveTarget/generator/extraMode gamma
-/muonActiveTarget/generator/extraEnergy 1 GeV
-/muonActiveTarget/generator/extraZ 50 mm
-/muonActiveTarget/generator/extraAngle 5 deg
+/muonActiveTarget/generator/generatorMode muGamma
+/muonActiveTarget/generator/secondaryEnergy 1 GeV
+/muonActiveTarget/generator/secondaryAngle 5 deg
+/muonActiveTarget/generator/emissionLayer 20
 ```
 
-The generator should always fire the baseline primary muon first, then add the
+Supported modes:
+
+- `cleanMuon`: baseline one-muon mode.
+- `muGamma`: primary `mu-` plus one injected `gamma`.
+- `muPair`: primary `mu-` plus injected `e-` and `e+`.
+- `muHadron`: primary `mu-` plus one injected hadron.
+
+Additional controls:
+
+- `/muonActiveTarget/generator/secondaryEnergy`: kinetic energy assigned to
+  each injected particle.
+- `/muonActiveTarget/generator/secondaryAngle`: angle relative to the beam axis.
+- `/muonActiveTarget/generator/emissionLayer`: layer index used as the emission
+  point.
+- `/muonActiveTarget/generator/emissionZ`: explicit z position, if a layer index
+  should not be used.
+- `/muonActiveTarget/generator/hadronSpecies`: `pi+`, `pi-`, `proton`, or
+  `neutron` for `muHadron`.
+
+The generator always fires the baseline primary muon first, then adds the
 controlled extra particle or particle pair in the same Geant4 event. The scoring
 already treats any non-track-1 muon energy deposition as extra activity, so
 these injected particles can be compared directly against the clean-muon
 baseline distributions.
 
+Example macros:
+
+- `macros/run_mu_gamma_15gev.mac`
+- `macros/run_mu_pair_15gev.mac`
+- `macros/run_mu_hadron_15gev.mac`
+
+These macros each start with 100 events for debugging. They are topology
+studies, not realistic rate calculations.
+
+## Debug Run Results
+
+The first implementation check ran the following 100-event samples:
+
+```sh
+./build/muon_active_target macros/run_mu_gamma_15gev.mac
+./build/muon_active_target macros/run_mu_pair_15gev.mac
+./build/muon_active_target macros/run_mu_hadron_15gev.mac
+```
+
+Generated output prefixes:
+
+- `output/mu_gamma_15gev_40layer_*`
+- `output/mu_pair_15gev_40layer_*`
+- `output/mu_neutron_15gev_40layer_*`
+
+Generated plot directories:
+
+- `plots/mu_gamma_15gev_40layer/`
+- `plots/mu_pair_15gev_40layer/`
+- `plots/mu_neutron_15gev_40layer/`
+
+Initial 100-event summary:
+
+| sample | mean total edep [MeV] | mean extra edep [MeV] | p90 extra edep [MeV] | max extra edep [MeV] | mean extra hit crystals |
+|---|---:|---:|---:|---:|---:|
+| `muGamma`, 1 GeV gamma, layer 20, 5 deg | 1464.169 | 1093.891 | 1244.025 | 2168.100 | 128.90 |
+| `muPair`, 0.5 GeV per lepton, layer 20, 10 deg | 1519.739 | 1148.628 | 1290.830 | 4031.440 | 133.38 |
+| `muHadron`, 1 GeV neutron, layer 20, 10 deg | 503.314 | 133.258 | 233.160 | 798.254 | 42.65 |
+
+Representative event displays:
+
+- `plots/mu_gamma_15gev_40layer/typical_event_display.svg`
+- `plots/mu_gamma_15gev_40layer/high-extra_event_display.svg`
+- `plots/mu_pair_15gev_40layer/typical_event_display.svg`
+- `plots/mu_pair_15gev_40layer/high-extra_event_display.svg`
+- `plots/mu_neutron_15gev_40layer/typical_event_display.svg`
+- `plots/mu_neutron_15gev_40layer/high-extra_event_display.svg`
+
+The gamma and pair samples produce large visible activity by construction. The
+neutron sample is much closer to the clean-muon baseline in mean extra energy,
+which is qualitatively consistent with the concern that neutral hadrons can be
+harder to veto in an active target alone.

@@ -110,6 +110,26 @@ The 15 GeV run uses the same naming pattern with the `muon_15gev_40layer`
 prefix. The 25-layer validation plots are documented in
 `docs/baseline_mip_calibration.md`.
 
+## Controlled Background-Like Samples
+
+The controlled generator modes inject simple visible particles in addition to
+the primary muon. These are topology studies, not realistic rate calculations:
+
+```sh
+./build/muon_active_target macros/run_mu_gamma_15gev.mac
+./build/muon_active_target macros/run_mu_pair_15gev.mac
+./build/muon_active_target macros/run_mu_hadron_15gev.mac
+```
+
+These macros currently run 100 events each and write:
+
+- `output/mu_gamma_15gev_40layer_*`
+- `output/mu_pair_15gev_40layer_*`
+- `output/mu_neutron_15gev_40layer_*`
+
+Generator controls live under `/muonActiveTarget/generator/`; see
+`docs/controlled_background_samples.md` for the scan plan and command details.
+
 `analysis/plot_basic.py` creates dependency-free SVG plots in `plots/`:
 
 - `plots/event_total_edep.svg`
