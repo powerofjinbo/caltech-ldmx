@@ -402,11 +402,11 @@ def hitmap(crystals, event_id, path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--events", default="output/muon_8gev_40layer_nt_events.csv")
-    parser.add_argument("--layers", default="output/muon_8gev_40layer_nt_layers.csv")
-    parser.add_argument("--crystals", default="output/muon_8gev_40layer_nt_crystals.csv")
+    parser.add_argument("--events", default="output/muon_5gev_40layer_nt_events.csv")
+    parser.add_argument("--layers", default="output/muon_5gev_40layer_nt_layers.csv")
+    parser.add_argument("--crystals", default="output/muon_5gev_40layer_nt_crystals.csv")
     parser.add_argument("--event-id", type=int, default=0)
-    parser.add_argument("--out-dir", default="plots")
+    parser.add_argument("--out-dir", default="plots/muon_5gev_40layer")
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)

@@ -284,7 +284,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("vrml", nargs="?", default="g4_01.wrl")
     parser.add_argument("--out", default="plots/event_display_tracks.svg")
-    parser.add_argument("--tracks", default="output/base_muon_tracks.csv")
+    parser.add_argument("--tracks", default="output/muon_5gev_40layer_vis_tracks.csv")
     parser.add_argument("--event-id", type=int, default=0)
     args = parser.parse_args()
 

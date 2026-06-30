@@ -217,9 +217,9 @@ def draw_event(events, tracks, event_id, path, title):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--events", default="output/muon_8gev_40layer_nt_events.csv")
-    parser.add_argument("--tracks", default="output/muon_8gev_40layer_tracks.csv")
-    parser.add_argument("--out-dir", default="plots/muon_8gev_40layer")
+    parser.add_argument("--events", default="output/muon_5gev_40layer_nt_events.csv")
+    parser.add_argument("--tracks", default="output/muon_5gev_40layer_tracks.csv")
+    parser.add_argument("--out-dir", default="plots/muon_5gev_40layer")
     parser.add_argument("--event-id", type=int)
     parser.add_argument("--select", choices=["typical", "high-extra"], default="typical")
     args = parser.parse_args()
